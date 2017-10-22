@@ -86,7 +86,7 @@ class Equitel
 		$url = "https://api.equitybankgroup.com/transaction/v1-sandbox/payments";
 		$data = array (
 		    "customer" => array (
-		        "mobileNumber": ""
+		        "mobileNumber" => ""
 		    ),
 		    "transaction" => array (
 		        "amount" => "",
@@ -94,6 +94,6 @@ class Equitel
 		        "type" => "",
 		        "auditNumber" => ""
 		    )
-		)
+		);
 	}
 }
