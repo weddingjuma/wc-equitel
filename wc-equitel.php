@@ -15,19 +15,20 @@ Author URI: https://mauko.co.ke/
 
 require_once( 'Equitel.php' );
 $equitel_options = get_option( 'woocommerce_equitel_settings');
-if ( $equitel_options['live'] == 'yes') {
+if ($equitel_options['live'] == 'yes') {
 	$live = true;
 } else {
 	$live = false;
 }
 
-$equitel = new \Equity\Equitel( $equitel_options['key'], $equitel_options['secret'], $live );
+$equitel = new \Equity\Equitel( $equitel_options['key'], $equitel_options['secret'], $equitel_options['id'], $live );
 
 if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) return;
 
 add_action( 'plugins_loaded', 'wc_equitel_gateway_init', 11 );
 
-function wc_equitel_add_to_gateways( $gateways ) {
+function wc_equitel_add_to_gateways( $gateways )
+{
 	$gateways[] = 'WC_Gateway_Equitel';
 	return $gateways;
 }
@@ -36,56 +37,57 @@ add_filter( 'woocommerce_payment_gateways', 'wc_equitel_add_to_gateways' );
 
 add_filter( 'woocommerce_states', 'equitel_woocommerce_states' );
 
-function equitel_woocommerce_states( $states ) {
+function equitel_woocommerce_states( $states )
+{
 
   $states['KE'] = array(
-	'BAR' => 'BARINGO',
-	'BMT' => 'BOMET',
-	'BGM' => 'BUNGOMA',
-	'BSA' => 'BUSIA',
-	'EGM' => 'ELGEYO/MARAKWET',
-	'EBU' => 'EMBU',
-	'GSA' => 'GARISSA',
-	'HMA' => 'HOMA BAY',
-	'ISL' => 'ISIOLO',
-	'KAJ' => 'KAJIADO',
-	'KAK' => 'KAKAMEGA',
-	'KCO' => 'KERICHO',
-	'KBU' => 'KIAMBU',
-	'KLF' => 'KILIFI',
-	'KIR' => 'KIRINYAGA',
-	'KSI' => 'KISII',
-	'KIS' => 'KISUMU',
-	'KTU' => 'KITUI',
-	'KLE' => 'KWALE',
-	'LKP' => 'LAIKIPIA',
-	'LAU' => 'LAMU',
-	'MCS' => 'MACHAKOS',
-	'MUE' => 'MAKUENI',
-	'MDA' => 'MANDERA',
-	'MAR' => 'MARSABIT',
-	'MRU' => 'MERU',
-	'MIG' => 'MIGORI',
-	'MBA' => 'MOMBASA',
-	'MRA' => 'MURANGA',
-	'NBO' => 'NAIROBI',
-	'NKU' => 'NAKURU',
-	'NDI' => 'NANDI',
-	'NRK' => 'NAROK',
-	'NYI' => 'NYAMIRA',
-	'NDR' => 'NYANDARUA',
-	'NER' => 'NYERI',
-	'SMB' => 'SAMBURU',
-	'SYA' => 'SIAYA',
-	'TVT' => 'TAITA TAVETA',
-	'TAN' => 'TANA RIVER',
-	'TNT' => 'THARAKA - NITHI',
-	'TRN' => 'TRANS NZOIA',
-	'TUR' => 'TURKANA',
-	'USG' => 'UASIN GISHU',
-	'VHG' => 'VIHIGA',
-	'WJR' => 'WAJIR',
-	'PKT' => 'WEST POKOT'
+	'BAR' => 'Baringo',
+	'BMT' => 'Bomet',
+	'BGM' => 'Bungoma',
+	'BSA' => 'Busia',
+	'EGM' => 'Elgeyo/Marakwet',
+	'EBU' => 'Embu',
+	'GSA' => 'Garissa',
+	'HMA' => 'Homa Bay',
+	'ISL' => 'Isiolo',
+	'KAJ' => 'Kajiado',
+	'KAK' => 'Kakamega',
+	'KCO' => 'Kericho',
+	'KBU' => 'Kiambu',
+	'KLF' => 'Kilifi',
+	'KIR' => 'Kirinyaga',
+	'KSI' => 'Kisii',
+	'KIS' => 'Kisumu',
+	'KTU' => 'Kitui',
+	'KLE' => 'Kwale',
+	'LKP' => 'Laikipia',
+	'LAU' => 'Lamu',
+	'MCS' => 'Machakos',
+	'MUE' => 'Makueni',
+	'MDA' => 'Mandera',
+	'MAR' => 'Marsabit',
+	'MRU' => 'Meru',
+	'MIG' => 'Migori',
+	'MBA' => 'Mombasa',
+	'MRA' => 'Muranga',
+	'NBO' => 'Nairobi',
+	'NKU' => 'Nakuru',
+	'NDI' => 'Nandi',
+	'NRK' => 'Narok',
+	'NYI' => 'Nyamira',
+	'NDR' => 'Nyandarua',
+	'NER' => 'Nyeri',
+	'SMB' => 'Samburu',
+	'SYA' => 'Siaya',
+	'TVT' => 'Taita Taveta',
+	'TAN' => 'Tana River',
+	'TNT' => 'Tharaka-Nithi',
+	'TRN' => 'Trans-Nzoia',
+	'TUR' => 'Turkana',
+	'USG' => 'Uasin Gishu',
+	'VHG' => 'Vihiga',
+	'WJR' => 'Wajir',
+	'PKT' => 'West Pokot'
   );
 
   return $states;
@@ -154,13 +156,13 @@ function wc_equitel_gateway_init() {
 					'description' => '',
 					'default'     => 'no',
 				),
-				// 'live' => array(
-				// 	'title'       => __( 'Enable/Disable', 'woocommerce' ),
-				// 	'label'       => __( 'Is Live Environment', 'woocommerce' ),
-				// 	'type'        => 'checkbox',
-				// 	'description' => '',
-				// 	'default'     => 'no',
-				// ),
+				'live' => array(
+					'title'       => __( 'Enable/Disable', 'woocommerce' ),
+					'label'       => __( 'Is Live Environment', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => '',
+					'default'     => 'yes',
+				),
 				'key' => array(
 					'title'       => __( 'App Key', 'woocommerce' ),
 					'type'        => 'text',
@@ -237,7 +239,7 @@ You will receive a confirmation message shortly thereafter.', 'woocommerce' ),
 					'title'       => __( 'Instructions', 'woocommerce' ),
 					'type'        => 'textarea',
 					'description' => __( 'Instructions that will be added to the thank you page.', 'woocommerce' ),
-					'default'     => __( 'Equitel.', 'woocommerce' ),
+					'default'     => __( 'Equitel Money.', 'woocommerce' ),
 					'desc_tip'    => true,
 				),
 				'enable_for_methods' => array(
@@ -246,7 +248,7 @@ You will receive a confirmation message shortly thereafter.', 'woocommerce' ),
 					'class'             => 'wc-enhanced-select',
 					'css'               => 'width: 400px;',
 					'default'           => '',
-					'description'       => __( 'If Equitel is only available for certain methods, set it up here. Leave blank to enable for all methods.', 'woocommerce' ),
+					'description'       => __( 'If Equitel Money is only available for certain methods, set it up here. Leave blank to enable for all methods.', 'woocommerce' ),
 					'options'           => $shipping_methods,
 					'desc_tip'          => true,
 					'custom_attributes' => array(
@@ -255,7 +257,7 @@ You will receive a confirmation message shortly thereafter.', 'woocommerce' ),
 				),
 				'enable_for_virtual' => array(
 					'title'             => __( 'Accept for virtual orders', 'woocommerce' ),
-					'label'             => __( 'Accept Equitel if the order is virtual', 'woocommerce' ),
+					'label'             => __( 'Accept Equitel Money if the order is virtual', 'woocommerce' ),
 					'type'              => 'checkbox',
 					'default'           => 'yes',
 				),

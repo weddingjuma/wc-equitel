@@ -8,12 +8,15 @@ class Equitel
 
 	private $key;
 	private $secret;
+	private $id;
+	protected $live;
 
-	public function __construct( $app_key, $app_secret, $id )
+	public function __construct( $app_key, $app_secret, $id, $live = true )
 	{
 		$this -> key = $app_key;
 		$this -> secret = $app_secret;
 		$this -> id = $id;
+		$this -> live = $live;
 	}
 
 	public function changePassword()
@@ -26,7 +29,7 @@ class Equitel
 		$url = "https://api.equitybankgroup.com/identity/v1-sandbox/token";
 	}
 
-	public function purchaseAirtime( $mobileNumber, $amount, $reference, $telco = "equitel" )
+	public function airtime( $mobileNumber, $amount, $reference, $telco = "equitel" )
 	{
 		$url = "https://api.equitybankgroup.com/transaction/v1-sandbox/airtime";
 		$data = array (
@@ -46,35 +49,37 @@ class Equitel
 	}
 
 	//Allows a Remittance Agent to transfer money to a Recipient Account in real-time.
-	public function remit(){
+	public function remit( $transactionReference, $senderName, $accountNumber, $bicCode, $mobileNumber, $walletName, $bankCode, $branchCode, $amount, $countryCode = "254", $currencyCode = "KSH", $paymentType = "", $remarks = "Remittance" )
+	{
 		$url = "https://api.equitybankgroup.com/transaction/v1-sandbox/remittance";
 
 		$data = array (
-		    "transactionReference" => "",
+		    "transactionReference" => $transactionReference,
 		    "source" => array (
-		        "senderName" => ""
+		        "senderName" => $senderName
 		    ),
 		    "destination" => array (
-		        "accountNumber" => "",
-		        "bicCode" => "",
-		        "mobileNumber" => "",
-		        "walletName" => "",
-		        "bankCode" => "",
-		        "branchCode" => ""
+		        "accountNumber" => $accountNumber,
+		        "bicCode" => $bicCode,
+		        "mobileNumber" => $mobileNumber,
+		        "walletName" => $walletName,
+		        "bankCode" => $bankCode,
+		        "branchCode" => $branchCode
 		    ),
 		    "transfer" => array (
-		        "countryCode" => "",
-		        "currencyCode" => "",
-		        "amount" => "",
-		        "paymentType" => "",
+		        "countryCode" => $countryCode,
+		        "currencyCode" => $currencyCode,
+		        "amount" => $amount,
+		        "paymentType" => $paymentType,
 		        "paymentReferences" => [ "" ],
-		        "remarks" => ""
+		        "remarks" => $remarks
 		    )
 		);
 	}
 
 	//A merchant can view the latest status of a transaction being processed
-	public function status( $transactionId ){
+	public function status( $transactionId )
+	{
 		$url = "https://api.equitybankgroup.com/transaction/v1-sandbox/payments/".$transactionId;
 
 		$data = $ajax -> get( $url );
@@ -82,17 +87,18 @@ class Equitel
 		return $data;
 	}
 
-	public function pay(){
+	public function pay( $mobileNumber, $amount, $description, $type, $auditNumber )
+	{
 		$url = "https://api.equitybankgroup.com/transaction/v1-sandbox/payments";
 		$data = array (
 		    "customer" => array (
-		        "mobileNumber" => ""
+		        "mobileNumber" => $mobileNumber
 		    ),
 		    "transaction" => array (
-		        "amount" => "",
-		        "description" => "",
-		        "type" => "",
-		        "auditNumber" => ""
+		        "amount" => $amount,
+		        "description" => $description,
+		        "type" => $type,
+		        "auditNumber" => $auditNumber
 		    )
 		);
 	}
